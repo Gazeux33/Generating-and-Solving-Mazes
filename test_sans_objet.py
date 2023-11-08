@@ -39,7 +39,7 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.transform_matrix()
-            self.transform_matrix()
+            #  self.transform_matrix()
             self.draw_matrix()
 
             self.clock.tick(120)
@@ -81,22 +81,28 @@ class Game:
         walls = self.get_walls()
         if walls:
             wall = random.choice(self.get_walls())
-            axis = random.randint(2, 2)
+            #  try:
+            axis = random.randint(1, 2)
             if axis == 1:
                 self.transform_lines(wall)
             elif axis == 2:
                 self.transform_columns(wall)
+            #  except IndexError as e:
+                #  print(e)
+                #  print(wall)
 
     def transform_lines(self, wall):
         y, x = wall
         if self.matrix[y][x - 1] != -1 and self.matrix[y][x + 1] != -1:
             if self.matrix[y][x - 1] != self.matrix[y][x + 1]:
+                # self.matrix[y][x] = 0 #  => test transform_lines
                 self.spread_color(wall, random.choice([self.matrix[y][x - 1], self.matrix[y][x + 1]]))
 
     def transform_columns(self, wall):
         y, x = wall
         if self.matrix[y - 1][x] != -1 and self.matrix[y + 1][x] != -1:
             if self.matrix[y - 1][x] != self.matrix[y + 1][x]:
+                # self.matrix[y][x] = 0 #  => test transform_columns
                 self.spread_color(wall, random.choice([self.matrix[y - 1][x], self.matrix[y + 1][x]]))
 
     def spread_color(self, wall, color):
