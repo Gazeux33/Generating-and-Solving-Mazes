@@ -115,12 +115,11 @@ class Game:
     def spread_color(self, wall, color):
         print(wall)
         y, x = wall
-        if x<58 and y<58:
-            self.matrix[y][x] = color
-            if self.matrix[y + 1][x] != color and self.matrix[y][x] != -1: self.spread_color((y + 1, x), color)
-            if self.matrix[y - 1][x] != color and self.matrix[y][x] != -1: self.spread_color((y - 1, x), color)
-            if self.matrix[y][x + 1] != color and self.matrix[y][x] != -1: self.spread_color((y, x + 1), color)
-            if self.matrix[y][x - 1] != color and self.matrix[y][x] != -1: self.spread_color((y, x - 1), color)
+        self.matrix[y][x] = color
+        if self.matrix[y + 1][x] != color and self.matrix[y][x] != -1: self.spread_color((y + 1, x), color)
+        if self.matrix[y - 1][x] != color and self.matrix[y][x] != -1: self.spread_color((y - 1, x), color)
+        if self.matrix[y][x + 1] != color and self.matrix[y][x] != -1: self.spread_color((y, x + 1), color)
+        if self.matrix[y][x - 1] != color and self.matrix[y][x] != -1: self.spread_color((y, x - 1), color)
 
 
 game = Game()
