@@ -40,7 +40,7 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.transform_matrix()
-
+            self.transform_matrix()
             self.draw_matrix()
 
             self.clock.tick(360)
@@ -99,7 +99,7 @@ class Game:
         y, x = wall
         if self.matrix[y][x - 1] != -1 and self.matrix[y][x + 1] != -1:
             if self.matrix[y][x - 1] != self.matrix[y][x + 1]:
-                #  self.matrix[y][x] = 0  # => test transform_lines
+                # self.matrix[y][x] = 0  # => test transform_lines
                 self.spread_color(wall, random.choice([self.matrix[y][x - 1], self.matrix[y][x + 1]]))
                 #  self.matrix[y][x] = random.choice([self.matrix[y][x - 1],self.matrix[y][x + 1]])
 
@@ -108,7 +108,7 @@ class Game:
         y, x = wall
         if self.matrix[y - 1][x] != -1 and self.matrix[y + 1][x] != -1:
             if self.matrix[y - 1][x] != self.matrix[y + 1][x]:
-                # self.matrix[y][x] = 0  # => test transform_columns
+                #  self.matrix[y][x] = 0  # => test transform_columns
                 self.spread_color(wall, random.choice([self.matrix[y - 1][x], self.matrix[y + 1][x]]))
                 #  self.matrix[y][x] = random.choice([self.matrix[y - 1][x],self.matrix[y + 1][x]])
 
@@ -116,11 +116,18 @@ class Game:
         print(wall)
         y, x = wall
         self.matrix[y][x] = color
-        if self.matrix[y + 1][x] != color and self.matrix[y][x] != -1: self.spread_color((y + 1, x), color)
-        if self.matrix[y - 1][x] != color and self.matrix[y][x] != -1: self.spread_color((y - 1, x), color)
-        if self.matrix[y][x + 1] != color and self.matrix[y][x] != -1: self.spread_color((y, x + 1), color)
-        if self.matrix[y][x - 1] != color and self.matrix[y][x] != -1: self.spread_color((y, x - 1), color)
 
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+
+                #  print("position = " + str(y + i) + " " + str(x + j) + ", inRange : " + str(self.is_wall_in_range(y + i, x + j)))
+                if abs(i)+abs(j) == 1 and self.is_wall_in_range(y + i, x + j) and self.matrix[y + i][x + j] != color and self.matrix[y + i][x + j] != -1:
+                    self.spread_color((y + i, x + j), color)
+
+    def is_wall_in_range(self, x, y):
+        if x >= len(self.matrix) - 1 or y >= len(self.matrix) - 1 or x < 0 or y < 0:
+            return False
+        return True
 
 game = Game()
 game.play()
