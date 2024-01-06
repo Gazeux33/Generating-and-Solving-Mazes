@@ -148,6 +148,8 @@ class Game:
         current_pos = start
         current_color = self.matrix[start[1]][start[0]]
 
+
+
         def prop(pos, color):
             x, y = pos
             for i in range(-1, 2):
@@ -156,6 +158,7 @@ class Game:
                         new_pos = (y + i, x + j)
                         prop(new_pos, color)
                         return new_pos
+
 
 
 game = Game()
