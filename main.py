@@ -68,7 +68,7 @@ class Game:
         return wall
 
     def transform_matrix(self):
-        if len(self.walls)>0:
+        if len(self.walls) > 0:
             wall = random.choice(self.walls)
             self.walls.remove(wall)
             self.transform_lines(wall)
