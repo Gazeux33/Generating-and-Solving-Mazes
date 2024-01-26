@@ -4,8 +4,6 @@ import random
 
 from Astar import Astar
 
-sys.setrecursionlimit(1000000)
-
 COLORS = {
     "-2": "#6A26E1",
     "-1": "#000000",
