@@ -1,2 +1,3 @@
-![maze gif](https://i.imgur.com/sD2Itpj.gif)
-![](https://i.imgur.com/HtGsc8U.png)
+![maze gif](https://i.imgur.com/Ks3lnFe.gif)
+![img](https://i.imgur.com/ZdJD4Rh.png)
+
