@@ -29,23 +29,20 @@ WHITE_NUMBER = 0
 
 class Game:
     def __init__(self):
-        self.NB_CASE = 301
-        self.SIZE = WIN_SIZE,WIN_SIZE
-        self.step = WIN_SIZE/self.NB_CASE
-
-
+        self.NB_CASE = 99
+        self.SIZE = WIN_SIZE, WIN_SIZE
+        self.step = WIN_SIZE / self.NB_CASE
 
         pygame.init()
         self.display_screen = pygame.display.set_mode(self.SIZE)
         pygame.display.set_caption("Labyrinth")
-
         self.clock = pygame.time.Clock()
 
-        self.matrix = [[WALL_NUMBER for _ in range(self.NB_CASE)] for _ in range(self.NB_CASE)]
-        self.add_colors()
-        self.walls = self.get_walls() + self.get_walls()
-
-        self.solver = Astar(self, (1, 0), (len(self.matrix) - 2, len(self.matrix) - 1))
+        self.matrix = None
+        self.walls = None
+        self.solver = None
+        self.finish = None
+        self.reset()
 
     def play(self):
         while True:
@@ -54,17 +51,22 @@ class Game:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_e:
+                    if event.key == pygame.K_e and self.finish:
                         path = self.solver.astar()
                         if path is None:
                             print("Pas de chemin trouvé")
                         else:
                             for coord in path:
-                                y,x = coord
+                                y, x = coord
                                 self.matrix[y][x] = VISITED_NUMBER
-            for i in range(200):
-                self.transform_matrix()
+                    if event.key == pygame.K_r and self.finish:
+                        self.reset()
+            if not self.finish:
+                for i in range(200):
+                    self.transform_matrix()
 
+            if len(self.walls) == 0:
+                self.finish = True
             self.draw_matrix()
 
             self.clock.tick(20)
@@ -73,16 +75,17 @@ class Game:
     def draw_matrix(self):
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix)):
-                rect = pygame.Rect(j * self.step, i * self.step, self.step+1, self.step+1)
+                rect = pygame.Rect(j * self.step, i * self.step, self.step + 1, self.step + 1)
                 color = self.matrix[i][j]
-                if color != WALL_NUMBER and color != VISITED_NUMBER:
-                    color = WHITE_NUMBER
+                if self.finish:
+                    if color != WALL_NUMBER and color != VISITED_NUMBER:
+                        color = WHITE_NUMBER
                 pygame.draw.rect(self.display_screen, COLORS[str(color)], rect)
 
     def add_colors(self):
         for i in range(1, len(self.matrix) - 1, 2):
             for j in range(1, len(self.matrix) - 1, 2):
-                self.matrix[i][j] = random.randint(1, len(COLORS) - 2)
+                self.matrix[i][j] = random.randint(1, 9)
         self.matrix[1][0] = WHITE_NUMBER
         self.matrix[len(self.matrix) - 2][len(self.matrix) - 1] = WHITE_NUMBER
 
@@ -122,16 +125,14 @@ class Game:
     def is_wall_in_range(self, x, y):
         return not (x > len(self.matrix) - 1 or y > len(self.matrix) - 1 or x < 0 or y < 0)
 
-    def is_finished(self):
+    def is_possible(self):
         start = 1, 0
         end = len(self.matrix) - 2, len(self.matrix) - 1
         visited = []
         return self.search_end(start, end, visited)
 
     def search_end(self, current, end, visited):
-
         y, x = current
-        self.matrix[y][x] = VISITED_NUMBER
         if current == end:
             return True
         if current in visited or not self.is_wall_in_range(y, x):
@@ -149,6 +150,13 @@ class Game:
                             return True
 
         return False
+
+    def reset(self):
+        self.matrix = [[WALL_NUMBER for _ in range(self.NB_CASE)] for _ in range(self.NB_CASE)]
+        self.add_colors()
+        self.walls = self.get_walls() + self.get_walls()
+        self.finish = False
+        self.solver = Astar(self, (1, 0), (len(self.matrix) - 2, len(self.matrix) - 1))
 
     def print_matrix(self):
         for row in self.matrix:

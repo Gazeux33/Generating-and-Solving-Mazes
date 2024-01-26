@@ -38,6 +38,7 @@ class Astar:
     def astar(self):
         while self.open_set:
             current_node = heapq.heappop(self.open_set)  # Get the node with the lowest total cost
+
             if current_node.coord == self.end_node.coord:
                 # Path found
                 return self.reconstruct_path(current_node)
