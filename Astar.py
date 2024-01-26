@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 import pygame
 import heapq
 
@@ -18,12 +17,8 @@ class Node:
 
 @dataclass
 class Astar:
-    game: object
-    start: (int, int)
-    end: (int, int)
-    screen: pygame.Surface
-
-    def __init__(self, game, start, end):
+    def __init__(self, game, start, end,display_mode):
+        self.display_mode = display_mode
         self.game = game
         self.matrix = self.game.matrix
         self.start_node = Node(start, 0, self.heuristic(start, end))
@@ -31,13 +26,12 @@ class Astar:
         self.open_set = [self.start_node]
         self.closed_set = set()
 
-    @staticmethod
-    def heuristic(node, end):
-        return abs(end[0] - node[0]) + abs(end[1] - node[1])
-
     def astar(self):
         while self.open_set:
             current_node = heapq.heappop(self.open_set)  # Get the node with the lowest total cost
+            if self.display_mode:
+                self.game.matrix[current_node.coord[0]][current_node.coord[1]] = -3
+                self.game.update_screen()
 
             if current_node.coord == self.end_node.coord:
                 # Path found
@@ -71,7 +65,12 @@ class Astar:
                     neighbors.append((y + i, x + j))
         return neighbors
 
-    def reconstruct_path(self, node):
+    @staticmethod
+    def heuristic(node, end):
+        return abs(end[0] - node[0]) + abs(end[1] - node[1])
+
+    @staticmethod
+    def reconstruct_path(node):
         path = []
         while node:
             path.insert(0, node.coord)  # Insert at the beginning to reverse the path

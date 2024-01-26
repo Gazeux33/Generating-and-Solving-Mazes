@@ -5,6 +5,7 @@ import random
 from Astar import Astar
 
 COLORS = {
+    "-3": "#13008F",
     "-2": "#6A26E1",
     "-1": "#000000",
     "0": "#FFFFFF",
@@ -20,9 +21,12 @@ COLORS = {
 }
 
 WIN_SIZE = 800
-VISITED_NUMBER = -2
+PATH_NUMBER = -2
+VISITED_NUMBER = -3
 WALL_NUMBER = -1
 WHITE_NUMBER = 0
+DISPLAY_MODE = True
+FPS = 60
 
 
 class Game:
@@ -56,7 +60,9 @@ class Game:
                         else:
                             for coord in path:
                                 y, x = coord
-                                self.matrix[y][x] = VISITED_NUMBER
+                                self.matrix[y][x] = PATH_NUMBER
+                                if DISPLAY_MODE:
+                                    self.update_screen()
                     if event.key == pygame.K_r and self.finish:
                         self.reset()
             if not self.finish:
@@ -65,10 +71,9 @@ class Game:
 
             if len(self.walls) == 0:
                 self.finish = True
-            self.draw_matrix()
 
-            self.clock.tick(20)
-            pygame.display.flip()
+            self.update_screen()
+            self.clock.tick(FPS)
 
     def draw_matrix(self):
         for i in range(len(self.matrix)):
@@ -76,7 +81,7 @@ class Game:
                 rect = pygame.Rect(j * self.step, i * self.step, self.step + 1, self.step + 1)
                 color = self.matrix[i][j]
                 if self.finish:
-                    if color != WALL_NUMBER and color != VISITED_NUMBER:
+                    if color != WALL_NUMBER and color != VISITED_NUMBER and color != PATH_NUMBER:
                         color = WHITE_NUMBER
                 pygame.draw.rect(self.display_screen, COLORS[str(color)], rect)
 
@@ -154,11 +159,15 @@ class Game:
         self.add_colors()
         self.walls = self.get_walls() + self.get_walls()
         self.finish = False
-        self.solver = Astar(self, (1, 0), (len(self.matrix) - 2, len(self.matrix) - 1))
+        self.solver = Astar(self, (1, 0), (len(self.matrix) - 2, len(self.matrix) - 1), DISPLAY_MODE)
 
     def print_matrix(self):
         for row in self.matrix:
             print(row)
+
+    def update_screen(self):
+        self.draw_matrix()
+        pygame.display.flip()
 
 
 game = Game()
