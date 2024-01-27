@@ -6,5 +6,5 @@
 
 ## Solving Part
 ![Maze Solver Gif](https://i.imgur.com/4fcFyHN.gif)
-![Imgur](https://i.imgur.com/SX3gmJN.png)
+![Big Maze](https://i.imgur.com/EE1F72Jb.gif)
 
