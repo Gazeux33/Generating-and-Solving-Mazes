@@ -4,9 +4,11 @@ import random
 
 from Astar import Astar
 
+sys.setrecursionlimit(5000)
+
 COLORS = {
-    "-3": "#13008F",
-    "-2": "#6A26E1",
+    "-3": "#14E0E0",
+    "-2": "#13008F",
     "-1": "#000000",
     "0": "#FFFFFF",
     "1": "#4749FC",
@@ -25,13 +27,14 @@ PATH_NUMBER = -2
 VISITED_NUMBER = -3
 WALL_NUMBER = -1
 WHITE_NUMBER = 0
-DISPLAY_MODE = True
-FPS = 60
+DISPLAY_MODE = False
+COLOR_MODE = True
+FPS = 20
 
 
 class Game:
     def __init__(self):
-        self.NB_CASE = 99
+        self.NB_CASE = 299
         self.SIZE = WIN_SIZE, WIN_SIZE
         self.step = WIN_SIZE / self.NB_CASE
 
@@ -44,6 +47,7 @@ class Game:
         self.walls = None
         self.solver = None
         self.finish = None
+        self.has_deleted = None
         self.reset()
 
     def play(self):
@@ -70,7 +74,12 @@ class Game:
                     self.transform_matrix()
 
             if len(self.walls) == 0:
+                if not self.has_deleted:
+                    #self.delete_random_walls()
+                    self.has_deleted = True
                 self.finish = True
+
+
 
             self.update_screen()
             self.clock.tick(FPS)
@@ -80,7 +89,7 @@ class Game:
             for j in range(len(self.matrix)):
                 rect = pygame.Rect(j * self.step, i * self.step, self.step + 1, self.step + 1)
                 color = self.matrix[i][j]
-                if self.finish:
+                if self.finish or not COLOR_MODE:
                     if color != WALL_NUMBER and color != VISITED_NUMBER and color != PATH_NUMBER:
                         color = WHITE_NUMBER
                 pygame.draw.rect(self.display_screen, COLORS[str(color)], rect)
@@ -160,6 +169,7 @@ class Game:
         self.walls = self.get_walls() + self.get_walls()
         self.finish = False
         self.solver = Astar(self, (1, 0), (len(self.matrix) - 2, len(self.matrix) - 1), DISPLAY_MODE)
+        self.has_deleted = False
 
     def print_matrix(self):
         for row in self.matrix:
@@ -168,6 +178,15 @@ class Game:
     def update_screen(self):
         self.draw_matrix()
         pygame.display.flip()
+
+    def delete_random_walls(self):
+        walls = self.get_walls()
+        for i in range(self.NB_CASE*10):
+            wall = random.choice(walls)
+            walls.remove(wall)
+            y,x = wall
+            self.matrix[y][x] = WHITE_NUMBER
+
 
 
 game = Game()
