@@ -34,7 +34,7 @@ FPS = 20
 
 class Game:
     def __init__(self):
-        self.NB_CASE = 299
+        self.NB_CASE = 59
         self.SIZE = WIN_SIZE, WIN_SIZE
         self.step = WIN_SIZE / self.NB_CASE
 
