@@ -1,4 +1,4 @@
-# Generating and solving mazes
+# Generating and Solving Mazes
 
 ## Generation Part
 ![maze gif](https://i.imgur.com/Ks3lnFe.gif)
