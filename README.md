@@ -10,7 +10,9 @@ I repeat this operation as many times as there are walls.
 
 ## Solving Part
 
-To resolve the maze as quickly as possible I used the A* algorithm. This algorithm consists of evaluating each neighbours of a position to determine the best direction to take
+To resolve the maze as quickly as possible I used the A* algorithm. 
+This algorithm consists of evaluating each neighbours of a position to determine the best direction to take
+
 ![Maze Solver Gif](https://i.imgur.com/4fcFyHN.gif)
 
 ![Big Maze](https://i.imgur.com/rhk85PK.gif)
